@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'message.dart';
 import 'user.dart';
 import 'util.dart';
 
@@ -26,6 +27,7 @@ class Room extends Equatable {
     this.name,
     required this.type,
     required this.users,
+    this.lastMessage,
   });
 
   /// Creates room from a map (decoded JSON).
@@ -38,7 +40,8 @@ class Room extends Equatable {
         type = getRoomTypeFromString(json['type'] as String),
         users = (json['users'] as List<Map<String, dynamic>>)
             .map((e) => User.fromJson(e))
-            .toList();
+            .toList(),
+        lastMessage = json['lastMessage'] != null ? Message.fromJson(json['lastMessage'] as Map<String, dynamic>) : null;
 
   /// Converts room to the map representation, encodable to JSON.
   Map<String, dynamic> toJson() => {
@@ -82,7 +85,7 @@ class Room extends Equatable {
   /// Equatable props
   @override
   List<Object?> get props =>
-      [createdAt, id, imageUrl, metadata, name, type, users];
+      [createdAt, id, imageUrl, metadata, name, type, users, lastMessage];
 
   /// Created room timestamp, in ms
   final int? createdAt;
@@ -106,4 +109,6 @@ class Room extends Equatable {
 
   /// List of users which are in the room
   final List<User> users;
+
+  final Message? lastMessage;
 }
